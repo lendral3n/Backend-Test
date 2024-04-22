@@ -108,14 +108,10 @@ func (service *userService) ChangePassword(userId int, oldPassword, newPassword 
 		return errors.New("please input new password")
 	}
 
-	hashedNewPass, errHash := service.hashService.HashPassword(newPassword)
-	if errHash != nil {
-		return errors.New("error hash password")
-	}
+	hashedNewPass, _ := service.hashService.HashPassword(newPassword)
 
 	err := service.userData.ChangePassword(userId, oldPassword, hashedNewPass)
 	return err
-
 }
 
 // AdminCreateUser implements user.UserServiceInterface.
@@ -127,10 +123,7 @@ func (service *userService) AdminCreateUser(userId int, input user.User) error {
 	}
 
 	if input.Password != "" {
-		hashedPass, errHash := service.hashService.HashPassword(input.Password)
-		if errHash != nil {
-			return errors.New("error hash password")
-		}
+		hashedPass, _ := service.hashService.HashPassword(input.Password)
 		input.Password = hashedPass
 	}
 
